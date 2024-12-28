@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block title %}<title>Мир книг</title>{% endblock %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,
+    initial-scale=l">
+    {% load static %}
+    <style>
+    /* General body styles */
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+    background-image: url('{% static "background.png" %}');
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header styles */
+h1 {
+    color: #2c3e50; /* Dark blue shade */
+    text-align: center;
+}
+
+h2 {
+    color: #2c3e50; /* Dark blue shade */
+    text-align: center;
+}
+
+/* Navigation sidebar styles */
+.sidebar-nav li {
+    list-style: none;
+}
+
+.sidebar-nav a {
+    text-decoration: none;
+    color: #3498db;
+    display: block;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Pagination styles */
+.pagination {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.page-links a {
+    color: #3498db;
+    margin: 0 5px;
+    text-decoration: none;
+}
+
+.page-current {
+    color: #2c3e50;
+}
+
+/* Footer styles */
+footer {
+    color: #2c3e50;
+    text-align: center;
+    padding: 20px 0;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+p {
+text-align: center;
+color: #2c3e50;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+h4 {
+    color: #2c3e50; /* Dark blue shade */
+    text-align: center;
+}
+.copyright {
+    color: #2c3e50;
+    padding: 10px;
+    margin: 0;
+    width: 100%;
+    text-align: center;
+}
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+h3 {
+    color: #2c3e50; /* Dark blue shade */
+    text-align: center;
+}
+input {
+  display: block; margin: 0 auto;
+  padding: 8px 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+</style>
+    {% block head %}
+        <h1>Сеть книжных магазинов БукШоп</h1>
+    {% endblock %}
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+            {% block sidebar %}
+            <ul class="sidebar-nav">
+                <li><a href="{% url 'index' %}">Главная страница</a></li>
+                <li><a href="{% url 'books' %}">Bce книги</a></li>
+                <li><a href="{% url 'authors' %}">Все авторы</a></li>
+                <li><a href="{% url 'authors_add' %}">Редактировать авторов</a></li>
+                <li><a href="{% url 'book_create' %}">Добавить книгу</a></li>
+              {% if user.is_authenticated %}
+                <li>Пользователь: {{ user.get_username }}</li>
+                <li><a href="{% url 'logout'%}?next={{request.path}}">Выход</a></li>
+              {% else %}
+                <li><a href="{% url 'login'%}?next={{request.path}}">Вход</a></li>
+              {% endif %}
+            </ul>
+            {% endblock %}
+            </div>
+            <div class="col-sm-10 ">
+            {% block content %}{% endblock %}
+                {% block pagination %}
+                    {% if is_paginated %}
+                        <div class="pagination">
+                            <span class="page-links">
+                                {% if page_obj.has_previous %}
+                                    <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">Предыдущая</a>
+                                {% endif %}
+                                <span class="page-current">
+                                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+                                </span>
+                                {% if page_obj.has_next %}
+                                    <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">Следующая</a>
+                                {% endif %}
+                            </span>
+                        </div>
+            {% endif %}
+        {% endblock %}
+            {% block footer %}
+                {% block copyright %}
+            <p class="copyright">Copyright ООО "Книги БукШоп", 2024. Все права не защищены</p>
+                {% endblock %}
+            {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
